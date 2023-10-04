@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air Fryer Temp & Time Converter</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f7;
+            margin: 0;
+            color: #333;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px 40px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            margin-top: 20px;
+        }
+
+        #result strong {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 20px 10px;
+                padding: 20px 20px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Air Fryer Converter</h2>
+    <label for="temperature">Temperature:</label>
+    <input type="number" id="temperature" placeholder="Enter temperature">
+    
+    <label>Unit:</label>
+    <label><input type="radio" name="unit" value="Celsius" checked> Celsius</label>
+    <label><input type="radio" name="unit" value="Fahrenheit"> Fahrenheit</label>
+
+    <label for="time">Cooking Time (minutes):</label>
+    <input type="number" id="time" placeholder="Enter time">
+    
+    <button onclick="convert()">Calculate</button>
+    
+    <div id="result"></div>
+</div>
+
+<script>
+    function convert() {
+        const tempElement = document.getElementById('temperature');
+        const timeElement = document.getElementById('time');
+        const unitElements = document.getElementsByName('unit');
+
+        let unit;
+        for (let i = 0; i < unitElements.length; i++) {
+            if (unitElements[i].checked) {
+                unit = unitElements[i].value;
+                break;
+            }
+        }
+
+        let convertedTemp;
+        let convertedTime;
+
+        if (unit === 'Celsius') {
+            convertedTemp = parseFloat(tempElement.value) - 20;
+        } else {
+            convertedTemp = parseFloat(tempElement.value) - 35;
+        }
+        
+        convertedTime = parseFloat(timeElement.value) * 0.8;
+
+        document.getElementById('result').innerHTML = `
+            <strong>Air Fryer Settings:</strong><br>
+            Temperature: <strong>${convertedTemp.toFixed(2)}°${unit}</strong> <br>
+            Time: <strong>${convertedTime.toFixed(2)} minutes</strong>
+        `;
+    }
+</script>
+</body>
+</html>
