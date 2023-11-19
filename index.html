@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Air Fryer Temp & Time Converter</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -77,57 +84,127 @@
             }
         }
 
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 16px;
+            background-color: #fff;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 3px #007bff;
+        }
+        #about_app {
+            font-style: italic;
+            font-size: x-small;
+            text-align: center;
+        }
+
     </style>
 </head>
 <body>
-<div class="container">
-    <h2>Air Fryer Time/Temp Converter</h2>
-    <label for="temperature">Temperature:</label>
-    <input type="number" id="temperature" placeholder="Enter temperature">
-    
-    <label>Unit:</label>
-    <label><input type="radio" name="unit" value="Celsius" checked> Celsius</label>
-    <label><input type="radio" name="unit" value="Fahrenheit"> Fahrenheit</label>
+    <div class="container">
+        <h2>Air Fryer Time/Temp Converter</h2>
 
-    <label for="time">Cooking Time (minutes):</label>
-    <input type="number" id="time" placeholder="Enter time">
-    
-    <button onclick="convert()">Calculate</button>
-    
-    <div id="result"></div>
-</div>
+        <label for="preset">Choose a Food Preset:</label>
+        <select id="preset" onchange="loadPreset()">
+            <option value="">Select food...</option>
+            <!-- Preset options will be loaded here -->
+        </select>
+        <span>OR</span><br /><br />
+        <div id="manualInput">
+            <label for="temperature">Temperature:</label>
+            <input type="number" id="temperature" placeholder="Enter temperature">
+            
+            <label>Unit:</label>
+            <label><input type="radio" name="unit" value="Celsius" checked> Celsius</label>
+            <label><input type="radio" name="unit" value="Fahrenheit"> Fahrenheit</label>
 
-<script>
-    function convert() {
-        const tempElement = document.getElementById('temperature');
-        const timeElement = document.getElementById('time');
-        const unitElements = document.getElementsByName('unit');
+            <label for="time">Cooking Time (minutes):</label>
+            <input type="number" id="time" placeholder="Enter time">
+            
+            <button onclick="convert()">Calculate</button>
+        </div>
 
-        let unit;
-        for (let i = 0; i < unitElements.length; i++) {
-            if (unitElements[i].checked) {
-                unit = unitElements[i].value;
-                break;
+        <div id="result"></div>
+    </div>
+    
+    <div id="about_app">
+        <span>Version 1.04 | Created by Chris McDonnell - 2023</span>
+    </div>
+    <script>
+
+    // Load presets from the JSON file
+        fetch('presets.json')
+        .then(response => response.json())
+        .then(data => {
+            const presetSelect = document.getElementById('preset');
+            data.forEach(preset => {
+                const option = document.createElement('option');
+                option.value = JSON.stringify(preset);
+                option.textContent = preset.name;
+                presetSelect.appendChild(option);
+            });
+        });
+
+        function loadPreset() {
+            const preset = JSON.parse(document.getElementById('preset').value);
+            if (!preset) return;
+
+            // Clear manual input fields
+            document.getElementById('temperature').value = '';
+            document.getElementById('time').value = '';
+
+            // Display the preset values without conversion
+            document.getElementById('result').innerHTML = `
+            <strong>${preset.name} Air Fryer Settings:</strong><br>
+            Temperature: <strong>${preset.temp}°${preset.unit}</strong> <br>
+            Time: <strong>${preset.time} minutes</strong>
+        `;
+        }
+
+    // Manual convert function
+        function convert() {
+        // Reset the preset dropdown
+            document.getElementById('preset').selectedIndex = 0;
+
+            const tempElement = document.getElementById('temperature');
+            const timeElement = document.getElementById('time');
+            const unitElements = document.getElementsByName('unit');
+
+            let unit;
+            for (let i = 0; i < unitElements.length; i++) {
+                if (unitElements[i].checked) {
+                    unit = unitElements[i].value;
+                    break;
+                }
             }
-        }
 
-        let convertedTemp;
-        let convertedTime;
+            let convertedTemp;
+            let convertedTime;
 
-        if (unit === 'Celsius') {
-            convertedTemp = parseFloat(tempElement.value) - 20;
-        } else {
-            convertedTemp = parseFloat(tempElement.value) - 35;
-        }
-        
-        convertedTime = parseFloat(timeElement.value) * 0.8;
+            if (unit === 'Celsius') {
+                convertedTemp = parseFloat(tempElement.value) - 20;
+            } else {
+                convertedTemp = parseFloat(tempElement.value) - 35;
+            }
+            
+            convertedTime = parseFloat(timeElement.value) * 0.8;
 
-        document.getElementById('result').innerHTML = `
+            document.getElementById('result').innerHTML = `
             <strong>Air Fryer Settings:</strong><br>
             Temperature: <strong>${convertedTemp.toFixed(0)}°${unit}</strong> <br>
             Time: <strong>${convertedTime.toFixed(0)} minutes</strong>
-        `;
-    }
-</script>
+            `;
+        }
+    </script>
 </body>
 </html>
