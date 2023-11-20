@@ -108,25 +108,41 @@
             text-align: center;
         }
 
+        .italic {
+            font-style: italic;
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Air Fryer Time/Temp Converter</h2>
+        <h2>Air Fryer Converter</h2>
 
         <label for="preset">Choose a Food Preset:</label>
         <select id="preset" onchange="loadPreset()">
             <option value="">Select food...</option>
             <!-- Preset options will be loaded here -->
         </select>
-        <span>OR</span><br /><br />
+        <span class="italic">OR CHOOSE MANUAL TIMINGS BELOW</span><br /><br />
         <div id="manualInput">
             <label for="temperature">Temperature:</label>
             <input type="number" id="temperature" placeholder="Enter temperature">
             
-            <label>Unit:</label>
-            <label><input type="radio" name="unit" value="Celsius" checked> Celsius</label>
-            <label><input type="radio" name="unit" value="Fahrenheit"> Fahrenheit</label>
+            
+            
+            
+            <br />
+            <table>
+                <tbody>
+                    <tr>
+                        <td><label>Unit:</label></td>
+                        <td><label><input type="radio" name="unit" value="Celsius" checked> Celsius</label></td>
+                        <td><label><input type="radio" name="unit" value="Fahrenheit"> Fahrenheit</label></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <br />
 
             <label for="time">Cooking Time (minutes):</label>
             <input type="number" id="time" placeholder="Enter time">
